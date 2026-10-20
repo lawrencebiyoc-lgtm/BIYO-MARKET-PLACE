@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087f5b">
+<meta name="description" content="BIYO Marketplace: discover products from local and international sellers.">
+<title>BIYO Marketplace | Global Buy & Sell</title>
+<style>
+:root{--green:#087f5b;--dark:#12372d;--light:#f3f8f5;--gold:#f6c453;--muted:#66756e;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:#17231e}
+header{background:var(--green);color:white;padding:16px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0002}
+.wrap{max-width:1000px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:23px;font-weight:800;letter-spacing:.4px}.tagline{font-size:12px;margin-top:4px;opacity:.92}
+button,.btn{border:0;border-radius:10px;padding:11px 13px;font-weight:700;font-size:14px;cursor:pointer;display:inline-block;text-decoration:none}
+.primary{background:var(--gold);color:#263024}.white{background:white;color:var(--green)}.green{background:var(--green);color:white}.outline{background:transparent;color:var(--green);border:1px solid var(--green)}.danger{background:#fff0ef;color:var(--red);border:1px solid #f5c4c0}
+.hero{background:linear-gradient(135deg,#0a684d,#139b70);color:white;border-radius:18px;padding:22px 18px;margin:4px 0 16px}
+.hero h1{font-size:27px;line-height:1.15;margin:0 0 8px}.hero p{margin:0 0 16px;line-height:1.45}
+.notice{font-size:12px;line-height:1.5;color:var(--muted);margin-top:12px}.notice.warn{background:#fff8df;border:1px solid #f3d775;border-radius:10px;padding:10px;color:#59460a}
+.authbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:white;border:1px solid #dce8e0;border-radius:12px;padding:12px;margin-bottom:14px}
+.controls{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:16px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d4e0d9;border-radius:10px;background:white;font:inherit;margin-top:5px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}.sectionhead h2{font-size:20px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:white;border:1px solid #e1ebe5;border-radius:14px;overflow:hidden;box-shadow:0 2px 6px #153c2a0b}
+.photo{height:125px;background:#e6f3ec;display:flex;align-items:center;justify-content:center;font-size:46px;color:#2e785b;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}.details{padding:12px}.details h3{font-size:16px;margin:0 0 6px;overflow-wrap:anywhere}.price{font-weight:800;color:var(--green);margin-bottom:6px}.small{font-size:12px;color:var(--muted);line-height:1.45}.card button{width:100%;margin-top:9px}
+.panel{background:white;border:1px solid #e1ebe5;border-radius:14px;padding:15px;margin:14px 0}
+.formgrid{display:grid;grid-template-columns:1fr;gap:10px}.field label{font-size:13px;font-weight:700}
+.hidden{display:none!important}.empty{padding:24px;text-align:center;color:var(--muted);background:white;border-radius:12px}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0 16px}
+nav button{background:white;color:var(--green);border:1px solid #d9e6df;padding:10px 4px}
+.pill{display:inline-block;padding:4px 7px;border-radius:99px;background:#e4f5eb;color:#126342;font-size:11px;font-weight:700;margin:3px 0}
+hr{border:0;border-top:1px solid #e5eee8;margin:14px 0}
+footer{text-align:center;padding:24px 10px;color:var(--muted);font-size:12px}
+@media(min-width:620px){.controls{grid-template-columns:2fr 1fr 1fr}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.formgrid{grid-template-columns:1fr 1fr}.photo{height:155px}}
+</style>
+</head>
+<body>
+<header><div class="wrap" style="padding:0">
+<div class="top"><div><div class="brand">🌍 BIYO MARKETPLACE</div><div class="tagline">Buy and sell locally or across borders</div></div><div style="display:flex;gap:7px;align-items:center"><button class="white" id="accountTop" onclick="showSection('account')">Sign in / Join</button><button class="white" id="ownerLock" aria-label="Owner login" title="Owner login" style="padding:10px" onclick="ownerGate()">🔒</button></div></div>
+</div></header>
+<main class="wrap">
+<div class="authbar"><div><strong id="welcome">Welcome to BIYO</strong><div class="small" id="accountHint">Create an account to list products and manage your listings.</div></div><button class="outline" onclick="logout()" id="logoutBtn" hidden>Log out</button></div>
+<section class="hero">
+<h1>A marketplace without borders.</h1>
+<p>Discover products, compare prices, and contact sellers directly. Start selling with your first five listings commission-free.</p>
+<button class="primary" onclick="showSection(currentUser?'sell':'account')">＋ Sell an item</button>
+<button class="white" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Browse products</button>
+</section>
+<nav>
+<button onclick="showSection('home')">🏠 Market</button><button onclick="showSection(currentUser?'sell':'account')">📦 Sell</button><button onclick="showSection('account')">👤 Account</button><button onclick="showSection('ads')">📣 Promote</button>
+</nav>
+<section id="home">
+<div class="controls">
+<input id="search" placeholder="Search products..." oninput="renderProducts()">
+<select id="category" onchange="renderProducts()"><option value="">All categories</option><option>Phones & Electronics</option><option>Fashion & Shoes</option><option>Home & Furniture</option><option>Vehicles</option><option>Property</option><option>Farm Produce</option><option>Farm & Food</option><option>Services</option><option>Other</option></select>
+<select id="countryFilter" onchange="renderProducts()"><option value="">All countries</option><option>Malawi</option><option>Zambia</option><option>Tanzania</option><option>Mozambique</option><option>South Africa</option><option>Kenya</option><option>Nigeria</option><option>United Kingdom</option><option>United States</option><option>Other</option></select>
+</div>
+<div class="sectionhead" id="products"><h2>Marketplace listings</h2><span class="small" id="count">0 items</span></div>
+<div class="grid" id="productGrid"></div><div class="empty hidden" id="empty">No matching products yet. Be the first to list one.</div>
+</section>
