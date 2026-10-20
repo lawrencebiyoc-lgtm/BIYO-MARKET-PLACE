@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087f5b">
+<meta name="description" content="BIYO Marketplace: discover products from local and international sellers.">
+<title>BIYO Marketplace | Global Buy & Sell</title>
+<style>
+:root{--green:#087f5b;--dark:#12372d;--light:#f3f8f5;--gold:#f6c453;--muted:#66756e;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:#17231e}
+header{background:var(--green);color:white;padding:16px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0002}
+.wrap{max-width:1000px;margin:auto;padding:16px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:23px;font-weight:800;letter-spacing:.4px}.tagline{font-size:12px;margin-top:4px;opacity:.92}
+button,.btn{border:0;border-radius:10px;padding:11px 13px;font-weight:700;font-size:14px;cursor:pointer;display:inline-block;text-decoration:none}
+.primary{background:var(--gold);color:#263024}.white{background:white;color:var(--green)}.green{background:var(--green);color:white}.outline{background:transparent;color:var(--green);border:1px solid var(--green)}.danger{background:#fff0ef;color:var(--red);border:1px solid #f5c4c0}
+.hero{background:linear-gradient(135deg,#0a684d,#139b70);color:white;border-radius:18px;padding:22px 18px;margin:4px 0 16px}
+.hero h1{font-size:27px;line-height:1.15;margin:0 0 8px}.hero p{margin:0 0 16px;line-height:1.45}
+.notice{font-size:12px;line-height:1.5;color:var(--muted);margin-top:12px}.notice.warn{background:#fff8df;border:1px solid #f3d775;border-radius:10px;padding:10px;color:#59460a}
+.authbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:white;border:1px solid #dce8e0;border-radius:12px;padding:12px;margin-bottom:14px}
+.controls{display:grid;grid-template-columns:1fr;gap:9px;margin-bottom:16px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d4e0d9;border-radius:10px;background:white;font:inherit;margin-top:5px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}.sectionhead h2{font-size:20px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:white;border:1px solid #e1ebe5;border-radius:14px;overflow:hidden;box-shadow:0 2px 6px #153c2a0b}
+.photo{height:125px;background:#e6f3ec;display:flex;align-items:center;justify-content:center;font-size:46px;color:#2e785b;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}.details{padding:12px}.details h3{font-size:16px;margin:0 0 6px;overflow-wrap:anywhere}.price{font-weight:800;color:var(--green);margin-bottom:6px}.small{font-size:12px;color:var(--muted);line-height:1.45}.card button{width:100%;margin-top:9px}
+.panel{background:white;border:1px solid #e1ebe5;border-radius:14px;padding:15px;margin:14px 0}
+.formgrid{display:grid;grid-template-columns:1fr;gap:10px}.field label{font-size:13px;font-weight:700}
+.hidden{display:none!important}.empty{padding:24px;text-align:center;color:var(--muted);background:white;border-radius:12px}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0 16px}
+nav button{background:white;color:var(--green);border:1px solid #d9e6df;padding:10px 4px}
+.pill{display:inline-block;padding:4px 7px;border-radius:99px;background:#e4f5eb;color:#126342;font-size:11px;font-weight:700;margin:3px 0}
+hr{border:0;border-top:1px solid #e5eee8;margin:14px 0}
+footer{text-align:center;padding:24px 10px;color:var(--muted);font-size:12px}
+@media(min-width:620px){.controls{grid-template-columns:2fr 1fr 1fr}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.formgrid{grid-template-columns:1fr 1fr}.photo{height:155px}}
+</style>
+</head>
+<body>
+<header><div class="wrap" style="padding:0">
+<div class="top"><div><div class="brand">🌍 BIYO MARKETPLACE</div><div class="tagline">Buy and sell locally or across borders</div></div><div style="display:flex;gap:7px;align-items:center"><button class="white" id="accountTop" onclick="showSection('account')">Sign in / Join</button><button class="white" id="ownerLock" aria-label="Owner login" title="Owner login" style="padding:10px" onclick="ownerGate()">🔒</button></div></div>
+</div></header>
+<main class="wrap">
+<div class="authbar"><div><strong id="welcome">Welcome to BIYO</strong><div class="small" id="accountHint">Create an account to list products and manage your listings.</div></div><button class="outline" onclick="logout()" id="logoutBtn" hidden>Log out</button></div>
+<section class="hero">
+<h1>A marketplace without borders.</h1>
+<p>Discover products, compare prices, and contact sellers directly. Start selling with your first five listings commission-free.</p>
+<button class="primary" onclick="showSection(currentUser?'sell':'account')">＋ Sell an item</button>
+<button class="white" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Browse products</button>
+</section>
+<nav>
+<button onclick="showSection('home')">🏠 Market</button><button onclick="showSection(currentUser?'sell':'account')">📦 Sell</button><button onclick="showSection('account')">👤 Account</button><button onclick="showSection('ads')">📣 Promote</button>
+</nav>
+<section id="home">
+<div class="controls">
+<input id="search" placeholder="Search products..." oninput="renderProducts()">
+<select id="category" onchange="renderProducts()"><option value="">All categories</option><option>Phones & Electronics</option><option>Fashion & Shoes</option><option>Home & Furniture</option><option>Vehicles</option><option>Property</option><option>Farm Produce</option><option>Farm & Food</option><option>Services</option><option>Other</option></select>
+<select id="countryFilter" onchange="renderProducts()"><option value="">All countries</option><option>Malawi</option><option>Zambia</option><option>Tanzania</option><option>Mozambique</option><option>South Africa</option><option>Kenya</option><option>Nigeria</option><option>United Kingdom</option><option>United States</option><option>Other</option></select>
+</div>
+<div class="sectionhead" id="products"><h2>Marketplace listings</h2><span class="small" id="count">0 items</span></div>
+<div class="grid" id="productGrid"></div><div class="empty hidden" id="empty">No matching products yet. Be the first to list one.</div>
+</section>
+
+<section id="account" class="panel hidden">
+<div class="sectionhead"><h2>Account</h2><button class="outline" onclick="showSection('home')">Back to market</button></div>
+<div id="authForms">
+<p class="small">Create an account to use seller tools. This prototype stores account data only on this device and is not suitable for real passwords.</p>
+<div class="formgrid">
+<div><h3>Create account</h3><form id="registerForm">
+<div class="field"><label for="regName">Full name / shop name *</label><input id="regName" required maxlength="70"></div>
+<div class="field"><label for="regEmail">Email address *</label><input id="regEmail" type="email" required></div>
+<div class="field"><label for="regCountry">Country *</label><select id="regCountry" required><option value="">Choose country</option><option>Malawi</option><option>Zambia</option><option>Tanzania</option><option>Mozambique</option><option>South Africa</option><option>Kenya</option><option>Nigeria</option><option>United Kingdom</option><option>United States</option><option>Other</option></select></div>
+<div class="field"><label for="regPassword">Password *</label><input id="regPassword" type="password" minlength="8" required autocomplete="new-password"></div>
+<button class="green" style="margin-top:10px">Create account</button>
+</form></div>
+<div><h3>Sign in</h3><form id="loginForm">
+<div class="field"><label for="loginEmail">Email address *</label><input id="loginEmail" type="email" required autocomplete="username"></div>
+<div class="field"><label for="loginPassword">Password *</label><input id="loginPassword" type="password" required autocomplete="current-password"></div>
+<button class="green" style="margin-top:10px">Sign in</button>
+</form></div>
+</div>
+<div id="accountDetails" class="hidden"></div>
+<p class="notice warn">Security truth: this demo's local sign-in is only a mock-up. It does not securely authenticate users across devices. Never enter a password you use for email, banking, or other accounts.</p>
+</section>
+
+<section id="sell" class="panel hidden">
+<div class="sectionhead"><h2>List a product</h2><button class="outline" onclick="showSection('home')">Back</button></div>
+<p class="small" id="freeSlots">Your first 5 listings are commission-free in this demo.</p>
+<form id="sellForm">
+<div class="formgrid">
+<div class="field"><label for="title">Product name *</label><input id="title" required maxlength="80" placeholder="e.g. Samsung phone"></div>
+<div class="field"><label for="price">Price *</label><input id="price" type="number" min="1" required placeholder="e.g. 85000"></div>
+<div class="field"><label for="currency">Currency *</label><select id="currency" required><option value="MWK">MWK - Malawi Kwacha</option><option value="USD">USD - US Dollar</option><option value="ZMW">ZMW - Zambian Kwacha</option><option value="TZS">TZS - Tanzanian Shilling</option><option value="ZAR">ZAR - South African Rand</option><option value="GBP">GBP - British Pound</option><option value="EUR">EUR - Euro</option><option value="NGN">NGN - Nigerian Naira</option><option value="KES">KES - Kenyan Shilling</option></select></div>
+<div class="field"><label for="cat">Category *</label><select id="cat" required><option value="">Choose category</option><option>Phones & Electronics</option><option>Fashion & Shoes</option><option>Home & Furniture</option><option>Vehicles</option><option>Property</option><option>Farm & Food</option><option>Services</option><option>Other</option></select></div>
+<div class="field"><label for="seller">Seller / shop name *</label><input id="seller" required maxlength="60" placeholder="Your name or shop"></div>
+<div class="field"><label for="phone">WhatsApp number *</label><input id="phone" required inputmode="tel" placeholder="Include country code if possible"></div>
+<div class="field"><label for="location">City / region *</label><input id="location" required maxlength="80" placeholder="e.g. Zomba"></div>
+<div class="field"><label for="country">Country *</label><select id="country" required><option value="">Choose country</option><option>Malawi</option><option>Zambia</option><option>Tanzania</option><option>Mozambique</option><option>South Africa</option><option>Kenya</option><option>Nigeria</option><option>United Kingdom</option><option>United States</option><option>Other</option></select></div>
+<div class="field"><label for="image">Product photo (optional)</label><input id="image" type="file" accept="image/*"></div>
+</div>
+<div class="field" style="margin-top:10px"><label for="description">Description *</label><textarea id="description" rows="3" maxlength="700" required placeholder="Condition, size, delivery, shipping and returns..."></textarea></div>
+<p id="commissionNote" class="notice">First 5 listings per account are marked commission-free in this prototype. A real commission must be based on verified completed sales, not just published listings.</p>
+<button class="green" type="submit">Publish listing</button>
+</form>
+</section>
+
+
+<section id="messages" class="panel hidden">
+<div class="sectionhead"><h2>BIYO Messages</h2><button class="outline" onclick="showSection('home')">Back</button></div>
+<p class="notice warn">Prototype messaging is saved only on this device. It is not private or synchronized. Do not send passwords, payment details, or sensitive information.</p>
+<div class="field"><label for="chatProduct">Product / conversation topic</label><input id="chatProduct" maxlength="100" placeholder="e.g. Used Samsung phone"></div>
+<div class="field"><label for="chatTo">Other user's email or username</label><input id="chatTo" maxlength="120" placeholder="Seller or buyer account"></div>
+<div class="field"><label for="chatText">Message</label><textarea id="chatText" rows="3" maxlength="1000" placeholder="Write a message..."></textarea></div>
+<button class="green" onclick="sendDemoMessage()">Send message</button>
+<div class="sectionhead"><h3>Your local message history</h3></div>
+<div id="messageHistory" class="small">No messages yet.</div>
+</section>
+
+<section id="admin" class="panel hidden">
+<div class="sectionhead"><h2>Owner dashboard</h2><button class="outline" onclick="showSection('home')">Back</button></div>
+<p class="notice warn">Demo owner screen only. A real owner dashboard must use server-side role permissions, not a browser-only password.</p>
+<div id="adminLogin"><div class="field"><label for="ownerPass">Demo owner password</label><input id="ownerPass" type="password" placeholder="Demo password"></div><button class="green" style="margin-top:10px" onclick="loginOwner()">Open demo dashboard</button><p class="small">Demo password: <strong>BIYO-DEMO-ONLY</strong>. Change/remove this before any public release. This is not secure.</p></div>
+<div id="adminData" class="hidden"><p id="adminSummary"></p><button class="outline" onclick="exportListings()">Export listings CSV</button><button class="danger" onclick="clearListings()">Delete all demo listings</button></div>
+</section>
+
+<section id="ads" class="panel hidden">
+<div class="sectionhead"><h2>BIYO Promote</h2><button class="outline" onclick="showSection('home')">Back</button></div>
+<p>Promote your product listing to get more visibility. Paid promotion is planned, but this prototype does not collect payments or publish paid ads yet.</p>
+<div class="field"><label for="adListing">Listing title</label><input id="adListing" maxlength="100" placeholder="Your product listing"></div>
+<div class="field"><label for="adPlan">Promotion plan</label><select id="adPlan"><option value="basic">Basic promotion · price to be configured</option><option value="featured">Featured listing · price to be configured</option></select></div>
+<button class="green" onclick="alert('Paid promotions are not active yet. Payment integration and server-side ad review must be added before charging users.')">Request promotion (demo)</button>
+<p class="notice">Do not pay anyone claiming this prototype accepts advertising payments. Real ads need published pricing, receipts, moderation, refund rules, and a trusted payment provider.</p>
+</section>
+
+<section class="panel">
+<strong>Buy safely</strong><p class="small">Check seller identity, item condition, delivery terms, and return policy. Avoid sending money before verifying a seller. Cross-border shipping, customs, payments, disputes, and refunds are not handled by this prototype.</p>
+</section>
+<footer>BIYO Marketplace · Early prototype · Local demo data only</footer>
+</main>
+<script>
+const PRODUCTS_KEY='biyo_global_demo_products_v2', USERS_KEY='biyo_global_demo_users_v2', SESSION_KEY='biyo_global_demo_session_v2';
+let products=[],users=[],currentUser=null;
+try{products=JSON.parse(localStorage.getItem(PRODUCTS_KEY)||'[]');if(!Array.isArray(products))products=[]}catch(e){products=[]}
+try{users=JSON.parse(localStorage.getItem(USERS_KEY)||'[]');if(!Array.isArray(users))users=[]}catch(e){users=[]}
+try{const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');if(s)currentUser=users.find(u=>u.email===s.email)||null}catch(e){}
+const el=id=>document.getElementById(id);
+function saveProducts(){try{localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));return true}catch(e){alert('Could not save. Try a smaller photo.');return false}}
+function saveUsers(){try{localStorage.setItem(USERS_KEY,JSON.stringify(users));return true}catch(e){alert('Could not save account on this device.');return false}}
+function showSection(id){if((id==='sell')&&!currentUser){id='account';alert('Create an account or sign in before selling.')}if((id==='admin')&&(!currentUser||currentUser.role!=='owner')){id='account';alert('Owner tools are restricted in this demo.')}['home','sell','account','admin','messages','ads'].forEach(x=>el(x).classList.toggle('hidden',x!==id));window.scrollTo({top:0,behavior:'smooth'});updateAccountUI()}
+function updateAccountUI(){
+ el('welcome').textContent=currentUser?'Signed in as '+currentUser.name:'Welcome to BIYO';
+ el('accountHint').textContent=currentUser?currentUser.email+' · '+(currentUser.country||'Country not set'):'Create an account to list products and manage your listings.';
+ el('accountTop').textContent=currentUser?'My account':'Sign in / Join';el('logoutBtn').hidden=!currentUser;
+ el('authForms').classList.toggle('hidden',!!currentUser);
+ if(currentUser){el('accountDetails').classList.remove('hidden');const mine=products.filter(p=>p.ownerEmail===currentUser.email);const freeUsed=mine.filter(p=>p.freeListing).length;
+ el('accountDetails').innerHTML='<h3>Account summary</h3><p><strong>Name:</strong> '+escapeHtml(currentUser.name)+'</p><p><strong>Country:</strong> '+escapeHtml(currentUser.country)+'</p><p><strong>Your listings:</strong> '+mine.length+'</p><p><strong>Commission-free listings used:</strong> '+freeUsed+' / 5</p><button class="green" onclick="showSection(\'sell\')">List a product</button><button class="outline" onclick="showSection(\'home\')">Browse market</button>';}else{el('accountDetails').classList.add('hidden')}
+}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+el('registerForm').addEventListener('submit',e=>{e.preventDefault();const name=el('regName').value.trim(),email=el('regEmail').value.trim().toLowerCase(),country=el('regCountry').value,password=el('regPassword').value;if(password.length<8){alert('Use at least 8 characters. Do not reuse an important password.');return}if(users.some(u=>u.email===email)){alert('An account with this email already exists on this device. Sign in instead.');return}users.push({name,email,country,password,role:'user'});if(!saveUsers())return;currentUser=users[users.length-1];localStorage.setItem(SESSION_KEY,JSON.stringify({email}));e.target.reset();updateAccountUI();alert('Demo account created on this device. This is not a secure online account yet.')});
+el('loginForm').addEventListener('submit',e=>{e.preventDefault();const email=el('loginEmail').value.trim().toLowerCase(),password=el('loginPassword').value;const u=users.find(x=>x.email===email&&x.password===password);if(!u){alert('Email or password is incorrect for accounts saved on this device.');return}currentUser=u;localStorage.setItem(SESSION_KEY,JSON.stringify({email}));e.target.reset();updateAccountUI();alert('Signed in on this device.');showSection('home')});
+function logout(){currentUser=null;localStorage.removeItem(SESSION_KEY);updateAccountUI();showSection('home')}
+function money(n,c){try{return new Intl.NumberFormat(undefined,{style:'currency',currency:c||'MWK',maximumFractionDigits:2}).format(Number(n||0))}catch(e){return (c||'MWK')+' '+Number(n||0).toLocaleString()}}
+function renderProducts(){const q=(el('search').value||'').toLowerCase(),cat=el('category').value,country=el('countryFilter').value;const filtered=products.filter(p=>(!cat||p.category===cat)&&(!country||p.country===country)&&[p.title,p.description,p.seller,p.location,p.country,p.category].join(' ').toLowerCase().includes(q));const grid=el('productGrid');grid.innerHTML='';filtered.forEach(p=>{const card=document.createElement('article');card.className='card';const photo=document.createElement('div');photo.className='photo';if(p.image){const img=document.createElement('img');img.src=p.image;img.alt=p.title;photo.appendChild(img)}else photo.textContent='🛍️';const d=document.createElement('div');d.className='details';const h=document.createElement('h3');h.textContent=p.title;const pr=document.createElement('div');pr.className='price';pr.textContent=money(p.price,p.currency);const meta=document.createElement('div');meta.className='small';meta.textContent=p.category+' · '+p.location+', '+p.country+' · '+p.seller;const badge=document.createElement('span');badge.className='pill';badge.textContent=p.freeListing?'First-five listing: no commission':'Standard listing';const desc=document.createElement('p');desc.className='small';desc.textContent=p.description;const b=document.createElement('button');b.className='green';b.textContent='Contact on WhatsApp';b.onclick=()=>contactSeller(p);const chat=document.createElement('button');chat.className='outline';chat.textContent='Message on BIYO';chat.onclick=()=>{if(!currentUser){alert('Create an account or sign in to use BIYO messaging.');showSection('account');return}el('chatProduct').value=p.title;el('chatTo').value=p.ownerEmail||p.seller;showSection('messages')};d.append(h,pr,meta,badge,desc,b,chat);card.append(photo,d);grid.appendChild(card)});el('count').textContent=filtered.length+' item'+(filtered.length===1?'':'s');el('empty').classList.toggle('hidden',filtered.length!==0)}
+function contactSeller(p){let n=(p.phone||'').replace(/\D/g,'');if(n.startsWith('0'))n='265'+n.slice(1);if(n.length===9)n='265'+n;if(n.length<10){alert('Seller WhatsApp number looks incomplete. Include country code.');return}const msg=`Hello ${p.seller}, I saw "${p.title}" on BIYO Marketplace for ${money(p.price,p.currency)}. Is it available? Please confirm shipping/delivery to my location.`;window.open('https://wa.me/'+n+'?text='+encodeURIComponent(msg),'_blank')}
+el('sellForm').addEventListener('submit',async e=>{e.preventDefault();if(!currentUser){alert('Sign in first.');showSection('account');return}const mine=products.filter(p=>p.ownerEmail===currentUser.email);const freeListing=mine.length<5;const file=el('image').files[0];let image='';if(file){if(file.size>700000){alert('Choose a photo smaller than 700 KB to reduce storage problems.');return}image=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}const p={id:Date.now(),title:el('title').value.trim(),price:Number(el('price').value),currency:el('currency').value,category:el('cat').value,seller:el('seller').value.trim(),phone:el('phone').value.trim(),location:el('location').value.trim(),country:el('country').value,description:el('description').value.trim(),image,ownerEmail:currentUser.email,freeListing,commissionRate:freeListing?0:5,createdAt:new Date().toISOString()};products.unshift(p);if(!saveProducts()){products.shift();return}e.target.reset();el('currency').value='MWK';updateAccountUI();renderProducts();renderMessages();showSection('home');alert(freeListing?'Listing published on this device. It is marked commission-free as one of your first five listings.':'Listing published on this device. A demo 5% rate is shown for listings after the first five; real commission must be agreed and tracked against completed sales.')});
+
+function ownerGate(){const p=prompt('Owner access. Enter the demo owner password:');if(p==='BIYO-DEMO-ONLY'){if(!currentUser){alert('Owner demo tools are open. This is not secure authentication.');}el('adminLogin').classList.add('hidden');el('adminData').classList.remove('hidden');const total=products.reduce((s,p)=>s+(p.freeListing?0:Number(p.price)*Number(p.commissionRate||5)/100),0);el('adminSummary').textContent=products.length+' local listings. Commission estimate is not a real sales record.';showSection('admin')}else if(p!==null){alert('Incorrect password.')}} 
+function sendDemoMessage(){if(!currentUser){alert('Sign in first.');showSection('account');return}const to=el('chatTo').value.trim(),topic=el('chatProduct').value.trim(),body=el('chatText').value.trim();if(!to||!body){alert('Enter the other user and a message.');return}let arr=[];try{arr=JSON.parse(localStorage.getItem('biyo_demo_messages_v1')||'[]')}catch(e){}arr.push({from:currentUser.email,to,topic,body,at:new Date().toISOString()});try{localStorage.setItem('biyo_demo_messages_v1',JSON.stringify(arr))}catch(e){alert('Could not save message on this device.');return}el('chatText').value='';renderMessages();alert('Saved locally on this device only. The other person will not receive it until a shared backend is connected.')}
+function renderMessages(){let arr=[];try{arr=JSON.parse(localStorage.getItem('biyo_demo_messages_v1')||'[]')}catch(e){}const mine=arr.filter(m=>currentUser&&(m.from===currentUser.email||m.to===currentUser.email));el('messageHistory').innerHTML=mine.length?mine.slice().reverse().map(m=>'<div style="padding:8px;border-bottom:1px solid #e5eee8"><strong>'+escapeHtml(m.topic||'Message')+'</strong><br>'+escapeHtml(m.from)+' → '+escapeHtml(m.to)+'<br>'+escapeHtml(m.body)+'<br><small>'+escapeHtml(new Date(m.at).toLocaleString())+'</small></div>').join(''):'No messages on this device.'}
+
+function loginOwner(){if(el('ownerPass').value!=='BIYO-DEMO-ONLY'){alert('Incorrect demo password.');return}el('adminLogin').classList.add('hidden');el('adminData').classList.remove('hidden');const total=products.reduce((s,p)=>s+(p.freeListing?0:Number(p.price)*Number(p.commissionRate||5)/100),0);el('adminSummary').textContent=products.length+' local listings. Estimated listing-based commission: '+products.length+' listings counted; estimated amount '+total.toLocaleString()+' in mixed currencies, so this total is not financially meaningful. Use a real backend and separate currency totals before launch.'}
+function exportListings(){const rows=[['Title','Price','Currency','Category','Seller','Phone','Location','Country','Owner email','Free listing','Demo commission rate','Description'],...products.map(p=>[p.title,p.price,p.currency,p.category,p.seller,p.phone,p.location,p.country,p.ownerEmail,p.freeListing,p.commissionRate,p.description])];const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='biyo-demo-listings.csv';a.click();URL.revokeObjectURL(a.href)}
+function clearListings(){if(confirm('Delete all demo listings saved on this device?')){products=[];saveProducts();renderProducts();updateAccountUI();el('adminSummary').textContent='No listings.'}}
+updateAccountUI();renderProducts();renderMessages();
+</script>
+</body>
+</html>
